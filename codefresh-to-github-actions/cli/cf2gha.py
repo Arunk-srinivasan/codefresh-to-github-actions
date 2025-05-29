@@ -39,7 +39,7 @@ def main():
 
             with open(output_path, "w") as out:
                 out.write(gha_yaml)
-                print(f"✅ Converted {file} → {output_path}")
+                print(f"Converted {file} -> {output_path}")
 
 if __name__ == "__main__":
     main()
