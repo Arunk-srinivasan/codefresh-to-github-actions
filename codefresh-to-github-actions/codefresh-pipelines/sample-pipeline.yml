@@ -1,0 +1,38 @@
+version: '1.0'
+stages:
+  - clone
+  - build
+  - test
+  - deploy
+
+steps:
+  clone_repo:
+    title: Cloning Repository
+    type: git-clone
+    repo: my-org/my-app
+    revision: main
+    stage: clone
+
+  build_image:
+    title: Build Docker Image
+    type: build
+    image_name: my-org/my-app
+    tag: '${{CF_SHORT_REVISION}}'
+    dockerfile: Dockerfile
+    stage: build
+
+  run_tests:
+    title: Run Unit Tests
+    image: my-org/my-app:${{CF_SHORT_REVISION}}
+    commands:
+      - pytest tests/
+    stage: test
+
+  deploy_app:
+    title: Deploy App
+    image: alpine
+    commands:
+      - echo "Deploying to $ENVIRONMENT"
+    environment:
+      - ENVIRONMENT=production
+    stage: deploy
