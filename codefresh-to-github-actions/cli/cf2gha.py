@@ -1,7 +1,7 @@
 import os
 import openai
 
-openai.api_key = os.getenv("OPENAI_API_KEY")
+client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 INPUT_DIR = "../codefresh-pipelines"
 OUTPUT_DIR = "../.github/workflows"
@@ -21,12 +21,12 @@ Convert the following Codefresh pipeline to an advanced GitHub Actions workflow.
 
 GitHub Actions Workflow:
 """
-    res = openai.ChatCompletion.create(
+    response = client.chat.completions.create(
         model="gpt-4o",
         messages=[{"role": "user", "content": prompt}],
         temperature=0.2,
     )
-    return res.choices[0].message['content']
+    return response.choices[0].message.content
 
 def main():
     for file in os.listdir(INPUT_DIR):
