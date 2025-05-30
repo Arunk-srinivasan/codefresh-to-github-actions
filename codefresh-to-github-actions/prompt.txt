@@ -10,3 +10,4 @@ Convert this Codefresh pipeline to a GitHub Actions workflow with the following 
 Here is the Codefresh pipeline YAML:
 ```yaml
 {cf_yaml}
+GitHub Actions Workflow:
