@@ -8,7 +8,6 @@ Convert this Codefresh pipeline to a GitHub Actions workflow with the following 
 - Send Slack alert if deploy job fails
 
 Here is the Codefresh pipeline YAML:
-```yaml
 {cf_yaml}
-```
+
 GitHub Actions Workflow:
