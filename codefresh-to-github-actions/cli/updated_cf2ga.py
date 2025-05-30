@@ -2,6 +2,7 @@ import os
 import argparse
 import openai
 import yaml
+import re
 
 # Initialize OpenAI client
 client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
@@ -19,6 +20,21 @@ def convert_pipeline(cf_yaml, prompt_path):
     )
 
     return response.choices[0].message.content
+
+def extract_yaml_from_response(response_text):
+    # Prefer fenced code block (```yaml ... ```)
+    match = re.search(r"```yaml\s*(.*?)```", response_text, re.DOTALL)
+    if match:
+        return match.group(1).strip()
+
+    # Fallback: start from first valid YAML key
+    lines = response_text.splitlines()
+    for i, line in enumerate(lines):
+        if re.match(r"^\s*(name|on|jobs):", line):
+            return "\n".join(lines[i:]).strip()
+
+    # Final fallback: return entire content
+    return response_text.strip()
 
 def validate_yaml(yaml_str):
     try:
@@ -48,8 +64,8 @@ def main():
 
                 print(f" Converting {file}...")
 
-                gha_yaml = convert_pipeline(cf_yaml, args.prompt)
-                gha_yaml = gha_yaml.replace("```yaml", "").replace("```", "").strip()
+                raw_response = convert_pipeline(cf_yaml, args.prompt)
+                gha_yaml = extract_yaml_from_response(raw_response)
 
                 if not validate_yaml(gha_yaml):
                     log.write(f" {file}: YAML validation failed.\n")
@@ -60,7 +76,7 @@ def main():
 
                 with open(output_path, "w") as out:
                     out.write(gha_yaml)
-                    print(f" Saved to {output_path}")
+                    print(f"  Saved to {output_path}")
                     log.write(f" {file} -> {output_path}\n")
 
 if __name__ == "__main__":
