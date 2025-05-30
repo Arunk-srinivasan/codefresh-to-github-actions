@@ -49,6 +49,7 @@ def main():
                 print(f" Converting {file}...")
 
                 gha_yaml = convert_pipeline(cf_yaml, args.prompt)
+                gha_yaml = gha_yaml.replace("```yaml", "").replace("```", "").strip()
 
                 if not validate_yaml(gha_yaml):
                     log.write(f" {file}: YAML validation failed.\n")
