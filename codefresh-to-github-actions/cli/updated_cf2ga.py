@@ -32,8 +32,8 @@ def main():
     parser = argparse.ArgumentParser(description="Convert Codefresh pipelines to GitHub Actions using OpenAI GPT")
     parser.add_argument("--input", default="../codefresh-pipelines", help="Directory containing Codefresh YAML files")
     parser.add_argument("--output", default="../.github/workflows", help="Directory to save GitHub Actions workflows")
-    parser.add_argument("--prompt", default="prompt.txt", help="Path to the prompt template")
-    parser.add_argument("--log", default="conversion.log", help="Log file for conversions")
+    parser.add_argument("--prompt", default="../prompt.txt", help="Path to the prompt template")
+    parser.add_argument("--log", default="../conversion.log", help="Log file for conversions")
 
     args = parser.parse_args()
 
